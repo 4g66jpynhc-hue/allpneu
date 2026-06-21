@@ -1,10 +1,14 @@
-define('DB_HOST', getenv('MYSQLHOST'));
-define('DB_PORT', getenv('MYSQLPORT') ?: '3306');
-define('DB_NAME', getenv('MYSQLDATABASE') ?: 'allpneu');
-define('DB_USER', getenv('MYSQLUSER'));
-define('DB_PASS', getenv('MYSQLPASSWORD'));
+<?php
+define('DB_HOST', 'localhost');
+define('DB_PORT', '8889');
+define('DB_NAME', 'allpneu');
+define('DB_USER', 'root');
+define('DB_PASS', 'root');
+define('DB_CHARSET', 'utf8mb4');
 
-header("Access-Control-Allow-Origin: *");
+$origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
+header("Access-Control-Allow-Origin: " . ($origin ?: '*'));
+header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json; charset=utf-8");
