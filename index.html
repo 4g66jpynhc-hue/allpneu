@@ -2929,9 +2929,14 @@ function renderRapports(){
 
 // ===== CONFIG =====
 function loadConfig(){
-  const cfg=loadOne('config');
-  ['nom','siret','adresse','tel','email','tva','pfa','pde','delai','mo','rel','mentions','iban'].forEach(k=>{
-    const el=document.getElementById('c-'+k);if(el&&cfg[k]!==undefined)el.value=cfg[k];
+  // Toujours recharger depuis l'API
+  apiGet('config').then(function(cfg){
+    _cache['config'] = cfg || {};
+    ['nom','siret','adresse','tel','email','tva','pfa','pde','delai','mo','rel','mentions','iban'].forEach(function(k){
+      var el=document.getElementById('c-'+k);
+      if(el && cfg && cfg[k]!==undefined) el.value=cfg[k];
+    });
+    loadLogoPreview();
   });
 }
 function saveConfig(){
