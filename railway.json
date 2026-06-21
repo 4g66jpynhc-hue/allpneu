@@ -1,9 +1,5 @@
 {
-  "build": {
-    "builder": "NIXPACKS"
-  },
   "deploy": {
-    "startCommand": "apache2-foreground",
-    "restartPolicyType": "ON_FAILURE"
+    "startCommand": "php -S 0.0.0.0:$PORT -t /app"
   }
 }
