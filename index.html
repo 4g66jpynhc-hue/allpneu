@@ -814,7 +814,13 @@ tr:hover td{background:#fafafa}
 
 <script>
 // ===== STORAGE — API Backend =====
-var API_URL = 'api.php';
+var API_URL = (function(){
+  // Get token from cookie
+  var token = document.cookie.split(';').map(function(c){return c.trim();})
+    .find(function(c){return c.startsWith('allpneu_token=');});
+  var tok = token ? token.split('=')[1] : '';
+  return 'api.php?token=' + tok;
+})();
 
 var _cache = {};
 function load(k){ return (_cache[k] && Array.isArray(_cache[k])) ? _cache[k] : []; }
@@ -824,7 +830,7 @@ function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(
 
 async function apiGet(table){
   try{
-    var r=await fetch(API_URL+'?table='+table,{credentials:'include'});
+    var r=await fetch(API_URL+'&table='+table,{credentials:'include'});
     if(!r.ok) throw new Error('HTTP '+r.status);
     var data=await r.json();
     // Convert numeric fields from strings (MySQL returns strings)
@@ -849,14 +855,14 @@ async function apiGet(table){
 }
 async function apiPost(table,item){
   try{
-    await fetch(API_URL+'?table='+table,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)});
+    await fetch(API_URL+'&table='+table,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)});
     if(!_cache[table]) _cache[table]=[];
     if(Array.isArray(_cache[table])) _cache[table].unshift(item);
   }catch(e){ console.error('POST '+table+':',e); }
 }
 async function apiPut(table,id,data){
   try{
-    await fetch(API_URL+'?table='+table+'&id='+id,{method:'PUT',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+    await fetch(API_URL+'&table='+table+'&id='+id,{method:'PUT',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
     if(Array.isArray(_cache[table])){
       var i=_cache[table].findIndex(function(x){return x.id===id;});
       if(i>-1) Object.assign(_cache[table][i],data);
@@ -865,19 +871,19 @@ async function apiPut(table,id,data){
 }
 async function apiDelete(table,id){
   try{
-    await fetch(API_URL+'?table='+table+'&id='+id,{method:'DELETE',credentials:'include'});
+    await fetch(API_URL+'&table='+table+'&id='+id,{method:'DELETE',credentials:'include'});
     if(Array.isArray(_cache[table])) _cache[table]=_cache[table].filter(function(x){return x.id!==id;});
   }catch(e){ console.error('DELETE '+table+':',e); }
 }
 async function apiDeleteAll(table){
   try{
-    await fetch(API_URL+'?table='+table+'&all=1',{method:'DELETE',credentials:'include'});
+    await fetch(API_URL+'&table='+table+'&all=1',{method:'DELETE',credentials:'include'});
     _cache[table]=[];
   }catch(e){ console.error('DELETE ALL '+table+':',e); }
 }
 async function apiSaveConfig(cfg){
   try{
-    await fetch(API_URL+'?table=config',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(cfg)});
+    await fetch(API_URL+'&table=config',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(cfg)});
     _cache['config']=cfg;
   }catch(e){ console.error('config save:',e); }
 }

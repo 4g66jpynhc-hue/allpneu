@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/auth.php';
-session_destroy();
+setcookie('allpneu_token', '', time() - 3600, '/', '', true, true);
 header('Location: login.php');
 exit();

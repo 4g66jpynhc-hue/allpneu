@@ -1,10 +1,7 @@
 <?php
-require_once 'auth.php';
-
-if (isAuthenticated()) {
-    header('Location: index.php');
-    exit();
-}
+define('AUTH_USER', 'admin');
+define('AUTH_PASS', 'Abdemedjed84');
+define('AUTH_TOKEN', 'allpneu84_token_secret_xK9mP');
 
 $error = '';
 
@@ -13,9 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pass = isset($_POST['password']) ? $_POST['password'] : '';
 
     if ($user === AUTH_USER && $pass === AUTH_PASS) {
-        session_regenerate_id(true);
-        $_SESSION['allpneu_auth'] = true;
-        header('Location: index.php');
+        // Redirect with token
+        header('Location: index.php?token=' . AUTH_TOKEN);
         exit();
     } else {
         $error = 'Identifiant ou mot de passe incorrect.';
@@ -68,7 +64,7 @@ input:focus{outline:none;border-color:#1A56DB}
       <label for="username">Identifiant</label>
       <div class="input-wrap">
         <i class="ti ti-user"></i>
-        <input type="text" id="username" name="username" placeholder="admin" required value="<?php echo htmlspecialchars(isset($_POST['username']) ? $_POST['username'] : ''); ?>"/>
+        <input type="text" id="username" name="username" placeholder="admin" required/>
       </div>
     </div>
     <div class="form-group">
