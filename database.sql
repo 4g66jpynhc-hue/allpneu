@@ -1,0 +1,92 @@
+CREATE DATABASE IF NOT EXISTS allpneu CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE allpneu;
+
+CREATE TABLE IF NOT EXISTS config (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  cle VARCHAR(100) NOT NULL UNIQUE,
+  valeur LONGTEXT,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS clients (
+  id VARCHAR(36) PRIMARY KEY,
+  nom VARCHAR(255) NOT NULL,
+  tel VARCHAR(50),
+  email VARCHAR(255),
+  adresse TEXT,
+  vehicule VARCHAR(255),
+  immat VARCHAR(50),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS catalogue (
+  id VARCHAR(36) PRIMARY KEY,
+  ref VARCHAR(50),
+  cat VARCHAR(50),
+  section_nom VARCHAR(100),
+  des TEXT NOT NULL,
+  pu DECIMAL(10,2) DEFAULT 0,
+  tva DECIMAL(5,2) DEFAULT 20,
+  unite VARCHAR(50),
+  stock INT DEFAULT NULL,
+  alerte INT DEFAULT 5,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS devis (
+  id VARCHAR(36) PRIMARY KEY,
+  num VARCHAR(50),
+  client VARCHAR(255),
+  tel VARCHAR(50),
+  email VARCHAR(255),
+  immat VARCHAR(50),
+  vehicule VARCHAR(255),
+  km VARCHAR(20),
+  date_doc DATE,
+  date_validite DATE,
+  notes TEXT,
+  statut VARCHAR(50) DEFAULT 'en cours',
+  facture_ref VARCHAR(50),
+  lignes LONGTEXT,
+  ht DECIMAL(10,2) DEFAULT 0,
+  tv DECIMAL(10,2) DEFAULT 0,
+  ttc DECIMAL(10,2) DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS factures (
+  id VARCHAR(36) PRIMARY KEY,
+  num VARCHAR(50),
+  devis_ref VARCHAR(50),
+  client VARCHAR(255),
+  tel VARCHAR(50),
+  email VARCHAR(255),
+  immat VARCHAR(50),
+  vehicule VARCHAR(255),
+  km VARCHAR(20),
+  date_doc DATE,
+  date_echeance DATE,
+  notes TEXT,
+  statut VARCHAR(50) DEFAULT 'attente',
+  lignes LONGTEXT,
+  ht DECIMAL(10,2) DEFAULT 0,
+  tv DECIMAL(10,2) DEFAULT 0,
+  ttc DECIMAL(10,2) DEFAULT 0,
+  paiement LONGTEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ordres (
+  id VARCHAR(36) PRIMARY KEY,
+  num VARCHAR(50),
+  client VARCHAR(255),
+  technicien VARCHAR(255),
+  vehicule VARCHAR(255),
+  immat VARCHAR(50),
+  km VARCHAR(20),
+  date_doc DATE,
+  statut VARCHAR(50) DEFAULT 'attente',
+  descrip TEXT,
+  facture_ref VARCHAR(50),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
